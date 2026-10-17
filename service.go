@@ -67,3 +67,4 @@ func (s *service) Health() []Health {
 }
 
 var ErrInvalidPaymentAmount = errors.New("Invalid payment amount")
+var ErrMissingCurrency = errors.New("Payment request names no currency")

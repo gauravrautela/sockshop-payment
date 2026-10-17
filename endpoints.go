@@ -30,6 +30,9 @@ func MakeAuthoriseEndpoint(s Service) endpoint.Endpoint {
 		span.SetTag("service", "payment")
 		defer span.Finish()
 		req := request.(AuthoriseRequest)
+		if req.Currency == "" {
+			return AuthoriseResponse{Err: ErrMissingCurrency}, nil
+		}
 		authorisation, err := s.Authorise(req.Amount)
 		return AuthoriseResponse{Authorisation: authorisation, Err: err}, nil
 	}
@@ -50,7 +53,8 @@ func MakeHealthEndpoint(s Service) endpoint.Endpoint {
 // AuthoriseRequest represents a request for payment authorisation.
 // The Amount is the total amount of the transaction
 type AuthoriseRequest struct {
-	Amount float32 `json:"amount"`
+	Amount   float32 `json:"amount"`
+	Currency string  `json:"currency"`
 }
 
 // AuthoriseResponse returns a response of type Authorisation and an error, Err.
